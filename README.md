@@ -8,6 +8,8 @@ Ingestion logic for particular self-storage data
 
 ![ERD](erd.png)
 
+My solution's [presentation.](https://docs.google.com/presentation/d/1f2DKLG761_9y4sgcUJ5ZcAgRZF1JEmjwVkWaHwHr9yg/edit?slide=id.p#slide=id.p)
+
 ### Setup to run the migration:
 
 **Manual setup:**

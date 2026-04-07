@@ -108,15 +108,17 @@ def build_tenant_table(
   
   try:
     tenant_df = raw_rentRoll.copy()
-    tenant_df= tenant_df.drop_duplicates().reset_index(drop=True)
-    tenant_df['tenantid'] = tenant_df.index + 1 ## IMPROVEMENT: pegar o tamanho da tabela já no banco e somar +1
+    ## take out any special charaacter, doesn't cover numbers with less then 9 or more than 10 digits yet:
+    tenant_df['phone'] = tenant_df['phone'].str.replace(r'[^\w\s]', '', regex=True).str.replace(' ', '')
     tenant_df.rename(columns={
       'firstName': 'firstname',
       'lastName': 'lastname'
     }, inplace=True)
-    ## take out any special charaacter, doesn't cover numbers with less then 9 or more than 10 digits yet:
-    tenant_df['phone'] = tenant_df['phone'].str.replace(r'[^\w\s]', '', regex=True).str.replace(' ', '')
-    tenant_df = tenant_df[['tenantid', 'firstname', 'lastname', 'phone', 'email']] ## No email treatment here
+    tenant_df['firstname'] = tenant_df['firstname'].str.strip()
+    tenant_df['lastname'] = tenant_df['lastname'].str.strip()
+    tenant_df = tenant_df[['firstname', 'lastname', 'phone', 'email']]
+    tenant_df= tenant_df.drop_duplicates().reset_index(drop=True)
+    tenant_df['tenantid'] = tenant_df.index + 1 ## IMPROVEMENT: pegar o tamanho da tabela já no banco e somar +1
     
     return tenant_df
 
@@ -147,6 +149,9 @@ def build_rentalContract_table(
     rental_contract_df = raw_rentRoll.copy()
     rental_contract_df = rental_contract_df.dropna(subset=['rentStartDate'])
     
+    rental_contract_df['firstName'] = rental_contract_df['firstName'].str.strip()
+    rental_contract_df['lastName'] = rental_contract_df['lastName'].str.strip()
+    
     ## join with tenant for tenantId
     rental_contract_df = rental_contract_df.merge(
       tenant_silver_df[['firstname', 'lastname', 'email', 'tenantid']],
@@ -171,9 +176,13 @@ def build_rentalContract_table(
       'rentalContractid': 'rentalcontractid'
     }, inplace=True)
     
-    # rental_contract_df.dropna(subset=['unitid', 'tenantid'], inplace=True)
-    
     rental_contract_df = rental_contract_df[['rentalcontractid','unitid','tenantid','startdate', 'enddate', 'currentamountowed']]
+    rental_contract_df['startdate'] = rental_contract_df['startdate'].apply(
+      lambda x: date_parser(x)
+    )
+    rental_contract_df['enddate'] = rental_contract_df['startdate'].apply(
+      lambda x: date_parser(x)
+    )
     
     return rental_contract_df
 

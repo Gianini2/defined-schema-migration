@@ -37,12 +37,12 @@ Ingestion logic for particular self-storage data
 **Trade-off's with the chosen approach:**
 | Python | SQL |
 |---|---| 
-| <span style="color:red;">harder</span> to build dependency order in case of too many tables | <span style="color:green">easier</span> to build an automatic dependency graph  |
-| <span style="color:green">easier</span> to do verifications before loading | <span style="color:red">harder</span> to import built-in validation steps in the process |
-| <span style="color:red">stores</span> data in python runtime (may be expensive) | apply transformation rules <span style="color:green">directly</span> in the database (may be way more <span style="color:green">performant and cheaper</span>) |
-| <span style="color:red">costly</span> to guarantee idempotency | <span style="color:green">easier and cheaper</span> to guarantee idempotency (UPSERTs - MERGE Scripts) |
-| <span style="color:green">easier</span> to run and integrate with programmatic workflows, environment and CI/CD | <span style="color:red">harder</span> to modularize and integrate with CI/CD, step-by-step automated process |
-| <span style="color:green">more</span> observability throughout intermediate process | <span style="color:red">less</span> observability among intermediate steps
+| $${\color{red}harder}$$ to build dependency order in case of too many tables | $${\color{green}easier}$$ to build an automatic dependency graph  |
+| $${\color{green}easier}$$ to do verifications before loading | $${\color{red}harder}$$ to import built-in validation steps in the process |
+| $${\color{red}stores}$$ data in python runtime (may be expensive) | apply transformation rules $${\color{green}directly}$$ in the database (may be way more $${\color{green}performant and cheaper}$$) |
+| $${\color{red}costly}$$ to guarantee idempotency | <span style="color:green">easier and cheaper</span> to guarantee idempotency (UPSERTs - MERGE Scripts) |
+| $${\color{green}easier}$$ to run and integrate with programmatic workflows, environment and CI/CD | $${\color{red}harder}$$ to modularize and integrate with CI/CD, step-by-step automated process |
+| $${\color{green}more}$$ observability throughout intermediate process | $${\color{red}less}$$ observability among intermediate steps
 
 
 

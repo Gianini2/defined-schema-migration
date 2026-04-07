@@ -8,6 +8,8 @@ Ingestion logic for particular self-storage data
 
 ![ERD](erd.png)
 
+My solution's [presentation.](https://docs.google.com/presentation/d/1f2DKLG761_9y4sgcUJ5ZcAgRZF1JEmjwVkWaHwHr9yg/edit?slide=id.p#slide=id.p)
+
 ### Setup to run the migration:
 
 **Manual setup:**
@@ -79,10 +81,10 @@ python .\src\main.py
 
 ### Bonus section:
 
-- Log any rejected/malformed rows for auditing:
- - The script is logging some rejected/malformed records for auditing purposes. E.g. names with more than 100 char are being printed
- - Proper logs are not setup in a separated file, although in many implementations this is a great approach.
+- Log any rejected/malformed rows for auditing.
+  - A: The script is logging some rejected/malformed records for auditing purposes. E.g. names with more than 100 char are being printed. Proper logs are not setup in a separated file, although in many implementations this is a great approach.
 - Make your script idempotent (re-runnable safely).
+  - A: I couldn't make it happen due to only few knowledge about the data and I needed to understand more how an `UPSERT` could work in this case. I didn't want to implement a hard `TRUNCATE TABLE` logic since the "silver" tables are probably going to contain more data than whats being loaded by this script.
 
 
 

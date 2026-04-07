@@ -10,13 +10,44 @@ Ingestion logic for particular self-storage data
 
 ### Setup to run the migration:
 
+**Manual setup:**
+1. Need an instance of PostgreSQL running, a database with a `monument` and a `monument_raw` schema already created to run the script against.
+2. Run the DDL scripts (`sql/ddl.sql`) to create the tables in the PostgreSQL database.
+3. Need to create an `.env` file on the root with the variable:
+```bash
+DATABASE_URL = 'postgresql://$username:$password@$host:$port/$database'
+```
+You will need to provide `$variables` in order to make the connection run
+
+4. Make sure you have python installed (3.12.9 preferred)
+5. Make sure you're in the virtual environment:
+```bash
+# Windows/macOS/Linux create .venv: 
+python -m venv .venv
+
+# Windows activate .venv:
+.venv\Scripts\activate
+
+# macOS/Linux activate .venv:
+source .venv/bin/activate
+```
+6. Make sure you have `pip` installed to install the dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+7. With you setup done, you should be able to run the migration tool with:
+```bash
+python src/main.py
+```
 
 ### Issues:
 - Invoice data seems incomplete, the rules for `invoiceAmount` were defined with the available data.
-- ....
+- Uncertainties regarding the data load frequency. Depending on other sources or requirements, the process may not be attend an ACID standard.
 
 
 ### Assumptions made:
+- Although `SQLAlchemy` and `Pandas` doesn't offer many security and scripting robustness, is a great tool for PoC's and what I chose to show my desing. 
 - I assumed that the `unit.csv` may have several extra records, instead of +300 .csv files, and the file will be received only once from the client.
   - If we’re dealing with multiple files with the same schema (to start to ingest into our fixed layer), then it needs an “append” job running first to unify the data.
   
@@ -34,7 +65,7 @@ Ingestion logic for particular self-storage data
 
 **Helpers for the developemnt:** As helpers I used official documentation mainly to check functions parameters because I already worked in very similar scripts with similar needs.
 
-**Trade-off's with the chosen approach:**
+**Trade-off's with the chosen approach (read in github):**
 | Python | SQL |
 |---|---| 
 | $${\color{red}harder}$$ to build dependency order in case of too many tables | $${\color{green}easier}$$ to build an automatic dependency graph  |
@@ -44,7 +75,12 @@ Ingestion logic for particular self-storage data
 | $${\color{green}easier}$$ to run and integrate with programmatic workflows, environment and CI/CD | $${\color{red}harder}$$ to modularize and integrate with CI/CD, step-by-step automated process |
 | $${\color{green}more}$$ observability throughout intermediate process | $${\color{red}less}$$ observability among intermediate steps
 
+### Bonus section:
 
+- Log any rejected/malformed rows for auditing:
+ - The script is logging some rejected/malformed records for auditing purposes. E.g. names with more than 100 char are being printed
+ - Proper logs are not setup in a separated file, although in many implementations this is a great approach.
+- Make your script idempotent (re-runnable safely).
 
 
 

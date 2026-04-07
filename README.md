@@ -39,8 +39,8 @@ Ingestion logic for particular self-storage data
 |---|---| 
 | $${\color{red}harder}$$ to build dependency order in case of too many tables | $${\color{green}easier}$$ to build an automatic dependency graph  |
 | $${\color{green}easier}$$ to do verifications before loading | $${\color{red}harder}$$ to import built-in validation steps in the process |
-| $${\color{red}stores}$$ data in python runtime (may be expensive) | apply transformation rules $${\color{green}directly}$$ in the database (may be way more $${\color{green}performant and cheaper}$$) |
-| $${\color{red}costly}$$ to guarantee idempotency | <span style="color:green">easier and cheaper</span> to guarantee idempotency (UPSERTs - MERGE Scripts) |
+| $${\color{red}stores}$$ data in python runtime (may be expensive) | apply transformation rules $${\color{green}directly}$$ in the database (may be way more $${\color{green}performant}$$) |
+| $${\color{red}costly}$$ to guarantee idempotency | $${\color{green}cheaper}$$ to guarantee idempotency (UPSERTs - MERGE Scripts) |
 | $${\color{green}easier}$$ to run and integrate with programmatic workflows, environment and CI/CD | $${\color{red}harder}$$ to modularize and integrate with CI/CD, step-by-step automated process |
 | $${\color{green}more}$$ observability throughout intermediate process | $${\color{red}less}$$ observability among intermediate steps
 

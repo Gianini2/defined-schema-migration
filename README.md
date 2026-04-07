@@ -38,7 +38,7 @@ pip install -r requirements.txt
 
 7. With you setup done, you should be able to run the migration tool with:
 ```bash
-python src/main.py
+python .\src\main.py
 ```
 
 ### Issues:
@@ -63,7 +63,9 @@ python src/main.py
 
 - `rentalInvoice.invoiceDueDate` = first date of the next month after `startDate`
 
-**Helpers for the developemnt:** As helpers I used official documentation mainly to check functions parameters because I already worked in very similar scripts with similar needs.
+**Helpers for the developemnt:** As helpers I used:
+- Official documentation mainly to check functions parameters because I already worked in very similar scripts with similar needs.
+- PostgreSQL documentation and foruns for SQL syntax, and metadata references.
 
 **Trade-off's with the chosen approach (read in github):**
 | Python | SQL |

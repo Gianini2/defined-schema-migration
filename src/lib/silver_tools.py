@@ -1,7 +1,8 @@
 import pandas as pd
 from dateutil import parser
 from sqlalchemy import create_engine
-from .raw_tools import get_secrets
+from .raw_tools import get_secrets, raw_tools
+from time import sleep
 
 
 def date_parser(date_str):
@@ -266,6 +267,28 @@ def retreive_raw_data():
   
   return raw_unit_df, raw_rentRoll_df
 
+
+def silver_verification(
+    connection_string: str,
+    table_name: str,
+    schema_name: str,
+    expected_rows: int,
+    ) -> bool:
+    '''Function that verifies the data loaded to postgres by querying the database metadata'''
+    
+    ## a bit messy because I didn't call them a good name in time (lack of time)
+    success = raw_tools.raw_verification(
+      connection_string=connection_string,
+      table_name=table_name,
+      schema_name=schema_name,
+      expected_rows=expected_rows
+    )
+    if not success:
+      raise Exception(f"Verification failed for {schema_name}.{table_name} table. Expected rows: {expected_rows}")
+    
+    return True
+      
+
 def silver_pipeline():
   '''Function that runs the silver pipeline.'''
   try:
@@ -285,12 +308,22 @@ def silver_pipeline():
     ## If a problem occours in this block, i.e. on the "tenant_silver_df", it will not load problematic data, 
     ## the previous data will be correct, and the next tables wil be blank yet.
     ## I've separated individually the loads since we could be calling these "Lambda" functions from a queue, and resume the queue from where it failed.
-    silver_data_load(data=facility_silver_df,        table_name='facility',       schema_name='monument', connection_string=connection_string)
-    silver_data_load(data=unit_silver_df,            table_name='unit',           schema_name='monument', connection_string=connection_string)
-    silver_data_load(data=tenant_silver_df,          table_name='tenant',         schema_name='monument', connection_string=connection_string)
-    # raise(Exception("ISSUE HEREEE")) ## testing
-    silver_data_load(data=rental_contract_silver_df, table_name='rentalContract', schema_name='monument', connection_string=connection_string)
-    silver_data_load(data=rental_invoice_silver_df,  table_name='rentalInvoice',  schema_name='monument', connection_string=connection_string)
+    facility_silver_exp_rows = silver_data_load(data=facility_silver_df,table_name='facility',schema_name='monument', connection_string=connection_string)
+    unit_silver_exp_rows = silver_data_load(data=unit_silver_df,table_name='unit',schema_name='monument', connection_string=connection_string)
+    tenant_silver_exp_rows = silver_data_load(data=tenant_silver_df,table_name='tenant',schema_name='monument', connection_string=connection_string)
+    # raise(Exception("ISSUE HEREEE")) ## Feel free to test here
+    rental_contract_silver_exp_rows = silver_data_load(data=rental_contract_silver_df, table_name='rentalContract', schema_name='monument', connection_string=connection_string)
+    rental_invoice_silver_exp_rows = silver_data_load(data=rental_invoice_silver_df,  table_name='rentalInvoice',  schema_name='monument', connection_string=connection_string)
+
+    print("###### Now validating the data for the monument schema ######")
+
+    ### Validating data load:
+    sleep(10) # to enable time for postgreSQL to refresh
+    silver_verification(connection_string=connection_string, table_name='facility', schema_name='monument', expected_rows=facility_silver_exp_rows)
+    silver_verification(connection_string=connection_string, table_name='unit', schema_name='monument', expected_rows=unit_silver_exp_rows)
+    silver_verification(connection_string=connection_string, table_name='tenant', schema_name='monument', expected_rows=tenant_silver_exp_rows)
+    silver_verification(connection_string=connection_string, table_name='rentalContract', schema_name='monument', expected_rows=rental_contract_silver_exp_rows)
+    silver_verification(connection_string=connection_string, table_name='rentalInvoice', schema_name='monument', expected_rows=rental_invoice_silver_exp_rows)
 
     return True
 

@@ -109,7 +109,7 @@ class raw_tools:
               f"but found {actual_rows} rows in {schema_name}.{table_name} table."
           )
       
-      print(f"raw_verification successful for {schema_name}.{table_name} table. Row count: {actual_rows}, Expected: {expected_rows}\n")
+      print(f"Raw_verification successful for {schema_name}.{table_name} table. Row count: {actual_rows}, Expected: {expected_rows}\n")
       return True
 
     except Exception as e:

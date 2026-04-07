@@ -37,7 +37,7 @@ Ingestion logic for particular self-storage data
 **Trade-off's with the chosen approach:**
 | Python | SQL |
 |---|---| 
-| <span style="color:red">harder</span> to build dependency order in case of too many tables | <span style="color:green">easier</span> to build an automatic dependency graph  |
+| <span style="color:red;">harder</span> to build dependency order in case of too many tables | <span style="color:green">easier</span> to build an automatic dependency graph  |
 | <span style="color:green">easier</span> to do verifications before loading | <span style="color:red">harder</span> to import built-in validation steps in the process |
 | <span style="color:red">stores</span> data in python runtime (may be expensive) | apply transformation rules <span style="color:green">directly</span> in the database (may be way more <span style="color:green">performant and cheaper</span>) |
 | <span style="color:red">costly</span> to guarantee idempotency | <span style="color:green">easier and cheaper</span> to guarantee idempotency (UPSERTs - MERGE Scripts) |

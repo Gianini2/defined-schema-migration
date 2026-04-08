@@ -65,7 +65,7 @@ python .\src\main.py
 
 - `rentalInvoice.invoiceDueDate` = first date of the next month after `startDate`
 
-**Helpers for the developemnt:** As helpers I used:
+**Helpers for the developemnt:**
 - Official documentation mainly to check functions parameters because I already worked in very similar scripts with similar needs.
 - PostgreSQL documentation and foruns for SQL syntax, and metadata references.
 

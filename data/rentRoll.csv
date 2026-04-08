@@ -1,5 +1,3 @@
 facilityName,unitNumber,firstName,lastName,phone,email,rentStartDate,rentEndDate,monthlyRent,currentRentOwed
-Dallas North,1001,Joao ,Santos,201-555-0123,joao.santos@monument.io,2026-04-01,2026-05-01,2500,2300
-Dallas North,1000,Joao ,Santos,201-555-0123,joao.santos@monument.io,2026-03-01,2026-04-01,2300,0000
-Dallas South,1002,Matthew,Hatch,201-555-0124,matthew.hatch@monument.io,03/20/2026,05/01/2026,2000,0
-Dallas South,1010,Augusto,Giani,201-555-9999,augusto.giani@monument.io,2026-01-01,2026-05-15,5000,5000
+Dallas North,1001,Joao ,Santos,201-555-0123,joao.santos@monument.io,2026-04-01,2026-05-01,1234,4321
+Dallas South,1002,Matthew,Hatch,201-555-0124,matthew.hatch@monument.io,03/20/2026,05/01/2026,1000,1

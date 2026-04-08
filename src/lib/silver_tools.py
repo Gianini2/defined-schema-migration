@@ -230,8 +230,6 @@ def build_rentalInvoice_table(
       'rentalContractid': 'rentalcontractid',
     }, inplace=True)
     
-    # rental_invoice_df.dropna(subset=['rentalcontractid'], inplace=True)
-    
     rental_invoice_df = rental_invoice_df[['invoiceid', 'rentalcontractid', 'invoiceduedate', 'invoiceamount', 'invoicebalance']]
     return rental_invoice_df
   
@@ -253,13 +251,10 @@ def silver_data_load(
     engine = create_engine(connection_string)
     rows_affected = data.to_sql(name=table_name, schema=schema_name, con=engine, if_exists=if_exists, index=False)
     print(f"Data loaded successfully into {table_name} table. Rows affected: {rows_affected}\n")
-      
-    ## Fazer validação do insert
    
     return rows_affected
   except Exception as e:
     raise Exception(f" >>>> Error during silver_data_load(): {e}")
-    ## to_sql method will present any error before actually insert any data (so, rollback is 'automatic')
 
 def retreive_raw_data():
   '''Retrieve data from raw layer'''

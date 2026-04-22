@@ -227,7 +227,6 @@ def build_rentalInvoice_table(
       'currentRentOwed': 'invoicebalance',
       'rentalContractid': 'rentalcontractid',
     }, inplace=True)
-
     rental_invoice_df = rental_invoice_df[['invoiceid', 'rentalcontractid', 'invoiceduedate', 'invoiceamount', 'invoicebalance']]
     return rental_invoice_df
 

@@ -45,11 +45,11 @@ python .\src\main.py
 
 ### Issues:
 - Invoice data seems incomplete, the rules for `invoiceAmount` were defined with the available data.
-- Uncertainties regarding the data load frequency. Depending on other sources or requirements, the process may not be attend an ACID standard.
+- Uncertainties regarding the data load frequency. Depending on other sources or requirements, the process may not meet an ACID standard.
 
 
 ### Assumptions made:
-- Although `SQLAlchemy` and `Pandas` doesn't offer many security and scripting robustness, is a great tool for PoC's and what I chose to show my desing. 
+- Although `SQLAlchemy` and `Pandas` doesn't offer many security and scripting robustness, is a great tool for PoC's and what I chose to show my design. 
 - I assumed that the `unit.csv` may have several extra records, instead of +300 .csv files, and the file will be received only once from the client.
   - If we’re dealing with multiple files with the same schema (to start to ingest into our fixed layer), then it needs an “append” job running first to unify the data.
   
@@ -65,9 +65,9 @@ python .\src\main.py
 
 - `rentalInvoice.invoiceDueDate` = first date of the next month after `startDate`
 
-**Helpers for the developemnt:**
+**Helpers for the development:**
 - Official documentation mainly to check functions parameters because I already worked in very similar scripts with similar needs.
-- PostgreSQL documentation and foruns for SQL syntax, and metadata references.
+- PostgreSQL documentation and forums for SQL syntax, and metadata references.
 
 **Trade-off's with the chosen approach (read in github):**
 | Python | SQL |
@@ -75,7 +75,7 @@ python .\src\main.py
 | $${\color{red}harder}$$ to build dependency order in case of too many tables | $${\color{green}easier}$$ to build an automatic dependency graph  |
 | $${\color{green}easier}$$ to do verifications before loading | $${\color{red}harder}$$ to import built-in validation steps in the process |
 | $${\color{red}stores}$$ data in python runtime (may be expensive) | apply transformation rules $${\color{green}directly}$$ in the database (may be way more $${\color{green}performant}$$) |
-| $${\color{red}costly}$$ to guarantee idempotency | $${\color{green}cheaper}$$ to guarantee idempotency (UPSERTs - MERGE Scripts) |
+| $${\color{orange}achievable}$$ idempotency via DELETE + reload on each run | $${\color{green}cheaper}$$ to guarantee idempotency (UPSERTs - MERGE Scripts) |
 | $${\color{green}easier}$$ to run and integrate with programmatic workflows, environment and CI/CD | $${\color{red}harder}$$ to modularize and integrate with CI/CD, step-by-step automated process |
 | $${\color{green}more}$$ observability throughout intermediate process | $${\color{red}less}$$ observability among intermediate steps
 
@@ -84,7 +84,7 @@ python .\src\main.py
 - Log any rejected/malformed rows for auditing.
   - A: The script is logging some rejected/malformed records for auditing purposes. E.g. names with more than 100 char are being printed. Proper logs are not setup in a separated file, although in many implementations this is a great approach.
 - Make your script idempotent (re-runnable safely).
-  - A: I couldn't make it happen due to only few knowledge about the data and I needed to understand more how an `UPSERT` could work in this case. I didn't want to implement a hard `TRUNCATE TABLE` logic since the "silver" tables are probably going to contain more data than whats being loaded by this script.
+  - A: The pipeline is now fully idempotent. Raw staging tables (`monument_raw`) are dropped and recreated on every run. Silver tables (`monument`) are deleted in reverse FK order before each load, then reloaded from scratch. Running the script multiple times produces the same database state.
 
 
 

@@ -31,7 +31,7 @@ def csv_loader(session: Session, file_path: str, model_class: type[RawUnit] | ty
 def raw_pipeline(engine, session: Session) -> bool:
   """Resets raw staging tables and loads source CSVs."""
   try:
-    # Drop and recreate raw staging tables to ensure a clean schema on every run
+    ## Drop and recreate raw staging tables to ensure a clean schema on every run
     with engine.begin() as conn:
       RawUnit.__table__.drop(conn, checkfirst=True)
       RawUnit.__table__.create(conn)

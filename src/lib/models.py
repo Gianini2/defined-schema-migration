@@ -10,9 +10,9 @@ class Base(DeclarativeBase):
   pass
 
 
-# Common silver layer mixin — provides load() and verify() on each table class
+## Common silver layer mixin — provides load() and verify() on each table class
 class SilverMixin:
-  __tablename__: str  # provided by the concrete ORM subclass
+  __tablename__: str  ## from ORM subclass
 
   @classmethod
   def load(cls, session: Session, df: pd.DataFrame) -> int:
@@ -42,7 +42,10 @@ class SilverMixin:
     return True
 
 
-# Facility table
+### Tables:
+
+
+## Facility table
 class Facility(Base, SilverMixin):
   __tablename__ = 'facility'
   __table_args__ = {'schema': 'monument'}
@@ -74,7 +77,7 @@ class Facility(Base, SilverMixin):
     return facility_df
 
 
-# Unit table
+## Unit table
 class Unit(Base, SilverMixin):
   __tablename__ = 'unit'
   __table_args__ = {'schema': 'monument'}
@@ -143,7 +146,7 @@ class Unit(Base, SilverMixin):
       raise Exception(f"Error during Unit.build() while applying logic: {e}") from e
 
 
-# Tenant table
+## Tenant table
 class Tenant(Base, SilverMixin):
   __tablename__ = 'tenant'
   __table_args__ = {'schema': 'monument'}
@@ -176,7 +179,7 @@ class Tenant(Base, SilverMixin):
       raise Exception(f"Error during Tenant.build() while applying logic: {e}") from e
 
 
-# RentalContract table
+## RentalContract table
 class RentalContract(Base, SilverMixin):
   __tablename__ = quoted_name('rentalContract', quote=True)
   __table_args__ = {'schema': 'monument'}
@@ -244,7 +247,7 @@ class RentalContract(Base, SilverMixin):
       raise Exception(f"Error during RentalContract.build() while applying logic: {e}") from e
 
 
-# RentalInvoice table
+## RentalInvoice table
 class RentalInvoice(Base, SilverMixin):
   __tablename__ = quoted_name('rentalInvoice', quote=True)
   __table_args__ = {'schema': 'monument'}
@@ -295,7 +298,7 @@ class RentalInvoice(Base, SilverMixin):
       raise Exception(f"Error during RentalInvoice.build() while applying logic: {e}") from e
 
 
-# RawUnit table (monument_raw staging)
+## RawUnit table (monument_raw staging)
 class RawUnit(Base):
   __tablename__ = 'unit'
   __table_args__ = {'schema': 'monument_raw'}
@@ -316,7 +319,7 @@ class RawUnit(Base):
     )
 
 
-# RawRentRoll table (monument_raw staging)
+## RawRentRoll table (monument_raw staging)
 class RawRentRoll(Base):
   __tablename__ = quoted_name('rentRoll', quote=True)
   __table_args__ = {'schema': 'monument_raw'}

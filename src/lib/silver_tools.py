@@ -20,14 +20,14 @@ def _silver_pipeline(engine, session: Session):
   try:
     raw_unit_df, raw_rentRoll_df = retrieve_raw_data(engine)
 
-    # Build DataFrames — no DB writes in this block; a failure here uploads nothing.
+    ## Build DataFrames — no DB writes in this block; a failure here uploads nothing.
     facility_df = Facility.build(raw_unit_df)
     unit_df = Unit.build(facility_df, raw_unit_df, raw_rentRoll_df)
     tenant_df = Tenant.build(raw_rentRoll_df)
     rental_contract_df = RentalContract.build(raw_rentRoll_df, facility_df, unit_df, tenant_df)
     rental_invoice_df = RentalInvoice.build(raw_rentRoll_df, rental_contract_df, unit_df)
 
-    # Truncate silver tables before loading to prevent PK conflicts on re-run (reverse FK order)
+    ## Truncate silver tables before loading to prevent PK conflicts on re-run (reverse FK order)
     with engine.begin() as conn:
       conn.execute(delete(RentalInvoice.__table__))
       conn.execute(delete(RentalContract.__table__))
@@ -35,7 +35,7 @@ def _silver_pipeline(engine, session: Session):
       conn.execute(delete(Unit.__table__))
       conn.execute(delete(Facility.__table__))
 
-    # Load tables — FK dependency order: facility → unit/tenant → rentalContract → rentalInvoice
+    ## Load tables — FK dependency order: facility -> unit/tenant -> rentalContract -> rentalInvoice
     facility_count = Facility.load(session, facility_df)
     unit_count = Unit.load(session, unit_df)
     tenant_count = Tenant.load(session, tenant_df)

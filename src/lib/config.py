@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
 
-
 def get_secrets() -> str:
   """Loads DATABASE_URL from environment variables."""
   # TODO: Replace with a proper secret manager for production deployments.

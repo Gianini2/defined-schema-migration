@@ -1,5 +1,6 @@
 import sys
 from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 from lib.raw_tools import raw_pipeline, get_secrets
 from lib.silver_tools import silver_main_pipeline
 
@@ -14,8 +15,9 @@ def main():
   if not step1_flag:
     sys.exit(1)
 
-  if not silver_main_pipeline(engine):
-    sys.exit(1)
+  with Session(engine) as session:
+    if not silver_main_pipeline(engine, session):
+      sys.exit(1)
 
 
 if __name__ == "__main__":

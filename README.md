@@ -81,10 +81,8 @@ python .\src\main.py
 
 ### Bonus section:
 
-- Log any rejected/malformed rows for auditing.
-  - A: The script is logging some rejected/malformed records for auditing purposes. E.g. names with more than 100 char are being printed. Proper logs are not setup in a separated file, although in many implementations this is a great approach.
-- Make your script idempotent (re-runnable safely).
-  - A: The pipeline is now fully idempotent. Raw staging tables (`monument_raw`) are dropped and recreated on every run. Silver tables (`monument`) are deleted in reverse FK order before each load, then reloaded from scratch. Running the script multiple times produces the same database state.
+- Loggin rejected/malformed rows for auditing: The script is logging some rejected/malformed records for auditing purposes. E.g. names with more than 100 char are being printed. Proper logs are not setup in a separated file, although in many implementations this is a great approach.
+- Make the script idempotent (re-runnable safely): The pipeline is fully idempotent. Raw staging tables (`monument_raw`) are dropped and recreated on every run. Silver tables (`monument`) are deleted in reverse FK order before each load, then reloaded from scratch. Running the script multiple times produces the same database state.
 
 
 
